@@ -7,7 +7,7 @@ dotenv.config();
 const SECRET = process.env.SECRET
 
 const verifyUsers = async (req, res, next) => {
-  const token = req.headers.authorization;
+  const token = req.headers.authorization || req.headers.token;
   if (token) {
     console.log('请求带有token');
     try {
