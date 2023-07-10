@@ -15,7 +15,7 @@ export default class WordsController {
     try {
       const { word, wordid, collection } = req.query;
       console.log(req.query);
-      const token = req.headers.authorization;
+      const token = req.headers.authorization || req.headers.token;
       // console.log(req.headers);
       // 对token进行解密获取其中的openid
       const openid = jwt.decode(token, process.env.SECRET);
@@ -39,7 +39,7 @@ export default class WordsController {
   static async apiCollectWord(req, res, next) {
     try {
       let wordId = req.params.wordId || {};
-      const token = req.headers.authorization;
+      const token = req.headers.authorization || req.headers.token;
       const word = req.body.word || "";
       // console.log(req.headers);
       // 对token进行解密获取其中的openid
@@ -76,7 +76,7 @@ export default class WordsController {
   static async apiAddWrongWord(req, res, next) {
     try {
       let wordId = req.params.wordId || {};
-      const token = req.headers.authorization;
+      const token = req.headers.authorization || req.headers.token;
       // console.log(req.headers);
       // 对token进行解密获取其中的openid
       const openid = jwt.decode(token, process.env.SECRET);
