@@ -17,8 +17,8 @@ dotenv.config();
 
 const SECRET = process.env.SECRET;
 
-const appId = 'wx9c1c9892749269a6';
-const appSecret = '695f07b9b575e9a83eae4361ea28bab8';
+const appId = process.env.APPID;
+const appSecret = process.env.APPSECRET;
 const grantType = 'authorization_code';
 
 
