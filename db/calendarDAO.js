@@ -38,7 +38,7 @@ class calendarDAO {
   }
 
   // 获取本月打卡记录
-  static async getCalendar(data) {
+  static async getCalendar(openid) {
     // 获取本月月份
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -50,7 +50,7 @@ class calendarDAO {
     const pipleline = [
       {
         "$match": {
-          "openid": "olAI055uR2maxbuRvcsadQOQePbM",
+          "openid": openid,
           "check_date": {
             "$regex": reg
           }
