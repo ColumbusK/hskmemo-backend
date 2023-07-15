@@ -12,6 +12,7 @@ router.route('/').get((req, res, next) => {
 router.route('/practice/:word').get(PracticeController.apiGetPractice);
 router.route('/practice-list/:num').get(PracticeController.apiGetPracticeList);
 router.route('/practicelist-user').get(PracticeController.apiGetPracticeListByUser);
+router.route('/practicelist-enhance').get(PracticeController.apiGetEnhancePractices);
 router.route('/practice/feedback/:wordid').post(PracticeController.apiPostPracticeFeedback);
 
 export default router;

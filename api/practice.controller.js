@@ -6,6 +6,7 @@ import WordsDAO from "../db/wordsDAO.js";
 import UsersDAO from "../db/usersDAO.js";
 import LearningDAO from "../db/learningDAO.js";
 import CollectionsDAO from "../db/collectionsDAO.js";
+import RecordsDAO from "../db/recordsDAO.js";
 
 import { shuffleArray, getCurrentDate, getTimeStamp } from "../utils/tools.js";
 import learningModel from "../models/learingList.js";
@@ -178,6 +179,34 @@ export default class PracticeController {
       res.json(pratciceList);
     } catch (e) {
       console.log(`apiGetPracticeListByUser, ${e}`);
+      res.status(500).json({ error: e });
+    }
+  }
+
+  // 增强练习接口
+  static async apiGetEnhancePractices(req, res, next) {
+    try {
+      let practiceList = [];
+      // 获取用户信息
+      const token = req.headers.authorization;
+      const openid = jwt.decode(token, process.env.SECRET);
+      const user = await UsersDAO.getUserByOpenId(openid);
+      const current_dict = user.current_dict;
+      console.log(`用户当前词典：${current_dict}`);
+      console.log(`apiGetEnhancePractices, user: `, user, current_dict);
+      if (!user) {
+        res.status(404).json({ error: "User Not found" });
+        return;
+      }
+      // 获取用户需要增强练习的错词
+      const wrongWords = await RecordsDAO.getWrongWords(openid);
+      console.log(`增强练习用户错词：`, wrongWords);
+      // 错词加工练习题目
+      practiceList = await wordsMatcher(openid, wrongWords, current_dict);
+      return res.json(practiceList);
+
+    } catch (e) {
+      console.log(`apiGetEnhancePractices, ${e}`);
       res.status(500).json({ error: e });
     }
   }

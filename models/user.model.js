@@ -11,7 +11,7 @@ const userModel = {
   openid: "",
   username: "",
   phone_number: "",
-  day_new: 10,
+  day_new: 20,
   day_review: 10,
   register_date: targetDate,
   total_time: "",
