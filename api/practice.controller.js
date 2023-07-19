@@ -10,7 +10,7 @@ import RecordsDAO from "../db/recordsDAO.js";
 
 import { shuffleArray, getCurrentDate, getTimeStamp } from "../utils/tools.js";
 import learningModel from "../models/learingList.js";
-import memoSequences from "../utils/algorithm.js";
+import { memoTime, calAccuracy } from "../utils/algorithm.js";
 
 
 dotenv.config();
@@ -129,6 +129,32 @@ export default class PracticeController {
     }
   }
 
+  // 今日复现单词接口
+  static async apiGetReviewList(req, res, next) {
+    try {
+      let practiceList = [];
+      // 获取用户信息
+      const token = req.headers.authorization;
+      const openid = jwt.decode(token, process.env.SECRET);
+      const user = await UsersDAO.getUserByOpenId(openid);
+      const current_dict = user.current_dict;
+      console.log(`用户当前词典：${current_dict}`);
+      console.log(`apiGetReviewList, user: `, user, current_dict);
+      if (!user) {
+        res.status(404).json({ error: "User Not found" });
+        return;
+      }
+      // 获取用户今日需要复现的单词
+      const _filter = { openid: openid, dict: current_dict, next: user.dict_progress[current_dict].times };
+      const learningWords = await LearningDAO.getDocuments(_filter);
+      const pratciceList = await wordsMatcher(openid, learningWords, current_dict);
+      res.json(pratciceList);
+    } catch (e) {
+      console.log(`apiGetReviewList, ${e}`);
+      res.status(500).json({ error: e });
+    }
+  }
+
   static async apiGetPracticeListByUser(req, res, next) {
     try {
       let practiceList = [];
@@ -226,10 +252,18 @@ export default class PracticeController {
       console.log(`apiPostPracticeFeedback, wordid: ${wordid}`);
       const filter = { openid: openid, wordid: new ObjectId(wordid), dict: current_dict };
       const learningWord = await LearningDAO.getDocument(filter);
+      const accuracy = calAccuracy(learningWord.records);
+      let learnTimes = learningWord.times + 1;
+      let nextTime = dict_times + memoTime[learningWord.times];
+      if (result === 0) {
+        nextTime = dict_times + 1;
+        learnTimes = 0;
+      }
       const updatedFields = {
         ...learningWord,
-        next: dict_times + memoSequences[learningWord.times],
-        times: learningWord.times + 1,
+        next: nextTime,
+        times: learnTimes,
+        accuracy: accuracy,
         records: [...learningWord.records, result],
         last_time: getTimeStamp(),
       };

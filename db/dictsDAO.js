@@ -40,7 +40,7 @@ class DictsDAO {
     try {
       const res = await dictionariesDB.findOne({ collection: collection });
       console.log("getDict", res);
-      return res.dict;
+      return res;
     } catch (e) {
       console.error(`getDict e: ${e}`);
       return null;

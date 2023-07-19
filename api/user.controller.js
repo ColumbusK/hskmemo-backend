@@ -7,6 +7,8 @@ import wordsDAO from "../db/wordsDAO.js";
 import CollectionsDAO from "../db/collectionsDAO.js";
 import calendarDAO from "../db/calendarDAO.js";
 import RecordsDAO from "../db/recordsDAO.js";
+import DictsDAO from "../db/dictsDAO.js";
+import LearningDAO from "../db/learningDAO.js";
 
 import userModel from "../models/user.model.js";
 import checkModel from "../models/check.js";
@@ -128,15 +130,19 @@ export default class LoginController {
         return;
       }
       const currentDict = user.current_dict;
-      const dictSize = await wordsDAO.getDictSize(currentDict);
-      console.log(currentDict, "dictSize", dictSize);
+      const dict = await DictsDAO.getDictName(currentDict);
+      console.log("dict", dict);
+      const dictSize = dict.size;
       const dictStudied = user.dict_progress[currentDict].count;
       const dictProgress = parseInt(dictStudied / dictSize * 100);
-      // const dayReviews = await PracticeController.apiGetPracticeListByUser()
+      // 获取用户今日需要复现的单词
+      const _filter = { openid: openid, dict: currentDict, next: user.dict_progress[currentDict].times };
+      const learningWords = await LearningDAO.getDocuments(_filter);
+      const dayReviews = learningWords.length;
       const data = {
         day_new: user.day_new,
-        day_reviews: 0,
-        current_dict: currentDict,
+        day_reviews: dayReviews,
+        current_dict: dict.dict,
         dict_studied: dictStudied,
         dict_size: dictSize,
         dict_progress: dictProgress,
