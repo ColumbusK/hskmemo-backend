@@ -58,7 +58,7 @@ export default class WordsController {
         wordId: new ObjectId(wordId),
         word: word,
         openid: openid,
-        dict: dict,
+        dict: dict.dict,
         collection: current_dict,
         time: new Date(),
       }
