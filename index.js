@@ -15,7 +15,7 @@ import RecordsDAO from "./db/recordsDAO.js";
 
 async function main() {
   dotenv.config();
-  const PORT = normalizePort(process.env.PORT || '3000');
+  const PORT = normalizePort(process.env.PORT || '3002');
   app.set('port', PORT);
   // 实例化一个MongoDB客户端
   const client = new mongodb.MongoClient(
