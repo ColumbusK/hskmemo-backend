@@ -4,7 +4,7 @@ import express from 'express';
 const router = express.Router();
 
 router.route('/').get((req, res, next) => {
-  res.render('index', { title: 'WeApp Backend' });
+  res.send('weapp | hello world');
 });
 
 export default router;
