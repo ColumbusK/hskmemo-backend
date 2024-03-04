@@ -84,6 +84,41 @@ export default class LoginController {
     }
   }
 
+  static async apiUpdateLogin(req, res, next) {
+    try {
+      let code = req.params.code || {};
+      console.log("Raw Body:", req.rawBody);  // 手动输出原始请求体
+      console.log("Parsed Body:", req.body);  // 手动输出解析后的请求体
+      console.log(req.body);
+      const userInfo = req.body;
+      console.log(`apiGetToken, code: ${code}`);
+      const url = `https://api.weixin.qq.com/sns/jscode2session?appid=${appId}&secret=${appSecret}&js_code=${code}&grant_type=${grantType}`;
+      let session = await axios.get(url);
+      console.log(session.data);
+      const { openid } = session.data;
+      // 检查 user 是否存在
+      const user = await usersDAO.getUserByOpenId(openid);
+      if (!user) {
+        const userObj = { ...userModel, openid }
+        usersDAO.createUser(userObj)
+        console.log("userObj", userObj);
+      }
+      else if (user) {
+        const filter = { openid: openid };
+        const updatedFields = { ...user, username: userInfo.nickName, userInfo: userInfo }
+        const updateUser = await usersDAO.updateDocumnet(filter, updatedFields);
+        console.log("updateUser", updateUser);
+      }
+      // 根据用户的openid生成token
+      const token = jwt.encode(openid, SECRET);
+      console.log("openid", openid, "\ntoken", token);
+      res.json({ token: token, openid: openid, userInfo: userInfo });
+    } catch (e) {
+      console.log(`api, ${e}`);
+      res.status(500).json({ error: e });
+    }
+  }
+
   static async apiUpdateUser(req, res, next) {
     try {
       let data = req.body || {};

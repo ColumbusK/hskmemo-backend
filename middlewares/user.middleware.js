@@ -23,6 +23,7 @@ const verifyUsers = async (req, res, next) => {
       res.status(401).send({ msg: 'token有误' })
     }
   } else {
+    res.status(401).send({ msg: '无token' })
     console.log('请求没有带token');
   }
 

@@ -11,6 +11,8 @@ router.route('/').get((req, res, next) => {
 
 router.route('/login').post(LoginController.apiLogin);
 router.route('/code/:code').get(LoginController.apiGetToken);
+// 更新用户信息登录并返回token
+router.route('/code/:code').post(LoginController.apiUpdateLogin);
 router.route('/times').put(LoginController.apiUpdateUser);
 router.route('/displayinfo').get(LoginController.apiGetUserDisplayInfo);
 router.route('/plan').put(LoginController.apiUpdateUserPlan);

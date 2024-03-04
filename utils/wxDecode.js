@@ -14,6 +14,7 @@ function decryptPhoneNumber(sessionKey, encryptedData, iv) {
 
   // 解密后的数据为 JSON 字符串，包含手机号码等信息
   const decryptedData = JSON.parse(decoded);
+  console.log("decryptedData", decryptedData);
 
   // 提取手机号码
 
