@@ -309,7 +309,7 @@ export default class LoginController {
         openid: openid,
         number: number,
       };
-      console.log("data", data);
+      console.log("UpdateUserCheck data", data);
       const result = await calendarDAO.addCalendar(data);
       console.log("result", result);
       res.json(result);

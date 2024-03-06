@@ -29,13 +29,14 @@ class calendarDAO {
   static async addCalendar(data) {
     try {
       const res = await collection.insertOne(data);
-      console.log("addCalendar", res);
-      return res;
+      console.log("addCalendar - Document inserted:", res.ops[0]);
+      return res.ops[0]; // 返回插入的文档
     } catch (e) {
-      console.error(`addCalendar e: ${e}`);
-      return null;
+      console.error("addCalendar - Error:", e.message);
+      return null; // 返回 null 表示插入失败
     }
   }
+
 
   // 获取本月打卡记录
   static async getCalendar(openid) {

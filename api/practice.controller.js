@@ -24,6 +24,9 @@ async function wordsMatcher(openid, wordList, dict) {
       let word = wordList[i].word;
       let wordid = wordList[i].wordid;
       const wordData = await WordsDAO.getWord(dict, word, wordid);
+      if (!wordData) {
+        continue;
+      }
       const collected = await CollectionsDAO.checkCollectedWord({ wordId: wordData._id, openid: openid });
       let randomWords = await WordsDAO.getWordsByRandom(dict, word, 3);
       const options = shuffleArray([...randomWords.map((item) => item.explaination), wordData.explaination]);
@@ -230,7 +233,6 @@ export default class PracticeController {
       // 错词加工练习题目
       practiceList = await wordsMatcher(openid, wrongWords, current_dict);
       return res.json(practiceList);
-
     } catch (e) {
       console.log(`apiGetEnhancePractices, ${e}`);
       res.status(500).json({ error: e });
