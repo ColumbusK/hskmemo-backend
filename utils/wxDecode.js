@@ -1,4 +1,3 @@
-import crypto from 'crypto'
 
 // 解密函数
 function decryptPhoneNumber(sessionKey, encryptedData, iv) {

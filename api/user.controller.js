@@ -14,7 +14,7 @@ import LearningDAO from "../db/learningDAO.js";
 
 import userModel from "../models/user.model.js";
 import checkModel from "../models/check.js";
-import decryptPhoneNumber from "../utils/wxDecode.js";
+// import decryptPhoneNumber from "../utils/wxDecode.js";
 import { getCurrentDate } from "../utils/tools.js";
 
 dotenv.config();
@@ -123,10 +123,10 @@ export default class UserController {
       const { session_key, openid } = session.data;
       console.log("session_key", session_key, "\nopenid", openid);
       // 解密用户信息
-      const data = decryptPhoneNumber(session_key, encryptedData, iv);
-      const { phoneNumber } = data;
-      console.log('解密后 data: ', data)
-      console.log("phoneNumber", phoneNumber);
+      // const data = decryptPhoneNumber(session_key, encryptedData, iv);
+      // const { phoneNumber } = data;
+      // console.log('解密后 data: ', data)
+      // console.log("phoneNumber", phoneNumber);
       // 检查 user 是否存在
       const user = await usersDAO.getUserByOpenId(openid);
       if (!user) {
