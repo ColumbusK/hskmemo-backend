@@ -77,7 +77,8 @@ export default class UserController {
       }
       const tempPath = file.path;
       // const targetPath = path.join(__dirname, 'images', file.filename);
-      const success = await moveFile(tempPath, tempPath);
+      // const success = await moveFile(tempPath, tempPath);
+      const success = true;
       const avatar = "https://gitee.com/columbusk/newstand-resource/raw/master/donebg.png";
       if (success) {
         // 在真实应用中，你可能会将文件信息保存到数据库，然后返回文件的URL
