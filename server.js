@@ -17,10 +17,11 @@ app.use(express.json());
 
 
 app.use('/', indexRouter);
-app.use("/api/v1/user", userRouter);
 
 // 自定义中间件
 app.use(verifyUsers);
+app.use("/api/v1/user", userRouter);
+
 
 app.use("/api/v1/words", wordsRouter);
 app.use("/api/v1/practice", practiceRouter);

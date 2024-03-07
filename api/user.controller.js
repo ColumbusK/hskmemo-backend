@@ -1,6 +1,8 @@
 import axios from "axios";
 import jwt from "jwt-simple";
 import dotenv from "dotenv";
+import fs from 'fs/promises';
+import path from 'path';
 
 import usersDAO from "../db/usersDAO.js";
 import wordsDAO from "../db/wordsDAO.js";
@@ -24,7 +26,90 @@ const appSecret = process.env.APPSECRET;
 const grantType = 'authorization_code';
 
 
-export default class LoginController {
+const moveFile = async (tempPath, targetPath) => {
+  try {
+    await fs.rename(tempPath, targetPath);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+export default class UserController {
+  static async apiGetProfile(req, res) {
+    console.log("apiGetProfile");
+    try {
+      const openid = req.openid;
+      console.log("openid", openid);
+      const user = await usersDAO.getUserByOpenId(openid);
+      const {
+        username,
+        avatarUrl,
+        email,
+        gender,
+        country,
+      } = user;
+
+      const userFields = {
+        username,
+        avatarUrl,
+        email,
+        gender,
+        country,
+      };
+
+      console.log(userFields);
+      res.json(userFields);
+    } catch (error) {
+      return res.status(400).send('Get User Profile Failed');
+    }
+  }
+
+  // 头像上传更新
+  static async apiUpdateProfile(req, res) {
+    try {
+      console.log(req.file);
+      console.log("req.formData", req.body, req.body.username);
+      const file = req.file;
+      if (!file) {
+        return res.status(400).send('No file uploaded.');
+      }
+      const tempPath = file.path;
+      // const targetPath = path.join(__dirname, 'images', file.filename);
+      const success = await moveFile(tempPath, tempPath);
+      const avatar = "https://gitee.com/columbusk/newstand-resource/raw/master/donebg.png";
+      if (success) {
+        // 在真实应用中，你可能会将文件信息保存到数据库，然后返回文件的URL
+        res.send(`File uploaded: ${tempPath}`);
+        const token = req.headers.authorization;
+        const openid = jwt.decode(token, SECRET);
+        const user = await usersDAO.getUserByOpenId(openid);
+        console.log("user", user);
+        if (!user) {
+          res.status(404).json({ error: "Not found" });
+          return;
+        }
+        const filter = { openid: openid };
+        const updatedFields = {
+          ...user,
+          username: req.body.username,
+          avatarUrl: avatar,
+          email: req.body.email,
+          gender: req.body.gender,
+          country: req.body.country
+        };
+        const updateResponse = await usersDAO.updateDocumnet(filter, updatedFields);
+        console.log("updateResponse", updateResponse);
+      } else {
+        res.status(500).send('Error moving the file.');
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error.');
+    }
+  }
+
   // 登录|注册
   static async apiLogin(req, res, next) {
     try {
@@ -404,4 +489,6 @@ export default class LoginController {
       res.status(500).json({ error: e });
     }
   }
+
+
 }

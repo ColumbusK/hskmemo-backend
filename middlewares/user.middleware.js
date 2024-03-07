@@ -15,6 +15,7 @@ const verifyUsers = async (req, res, next) => {
       console.log("verifyUsers", openId);
       const user = await UsersDAO.getUserByOpenId(openId);
       if (user) {
+        req.openid = openId;
         await next();
       } else {
         res.status(400).send({ error: "no user" })
