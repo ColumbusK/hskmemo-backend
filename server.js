@@ -9,6 +9,14 @@ import dictsRouter from "./api/dicts.route.js";
 
 import { verifyUsers } from "./middlewares/user.middleware.js";
 
+
+import { exec } from 'child_process';
+
+exec('whoami', (error, stdout, stderr) => {
+  console.log(`Current user: ${stdout}`);
+});
+
+
 const app = express();
 
 
