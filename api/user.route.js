@@ -9,7 +9,7 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'home/yunfan/uploads'); // 设置上传目录，确保目录存在
+    cb(null, '/home/yunfan/uploads'); // 设置上传目录，确保目录存在
   },
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
