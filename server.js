@@ -8,6 +8,7 @@ import practiceRouter from "./api/practice.route.js";
 import dictsRouter from "./api/dicts.route.js";
 
 import { verifyUsers } from "./middlewares/user.middleware.js";
+import { errorHandler } from "./middlewares/errors.js";
 
 
 import { exec } from 'child_process';
@@ -35,10 +36,13 @@ app.use("/api/v1/words", wordsRouter);
 app.use("/api/v1/practice", practiceRouter);
 app.use("/api/v1/dicts", dictsRouter);
 
+// 错误处理中间件
+app.use(errorHandler);
 
 const unknownEndpoint = (request, response) => {
   response.status(404).json({ error: "route not found" });
 }
+
 
 app.use('*', unknownEndpoint);
 

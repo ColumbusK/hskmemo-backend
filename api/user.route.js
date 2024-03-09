@@ -4,12 +4,13 @@ import multer from 'multer';
 import path from 'path';
 
 
-
+//
 const router = express.Router();
 
+//
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '/home/yunfan/uploads'); // 设置上传目录，确保目录存在
+    cb(null, '/uploads'); // 设置上传目录，确保目录存在
   },
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
@@ -18,6 +19,7 @@ const storage = multer.diskStorage({
   }
 });
 
+//
 const upload = multer({ storage: storage });
 // register routes
 // get word
