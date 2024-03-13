@@ -71,6 +71,7 @@ export default class UserController {
     try {
       console.log(req.file);
       const file = req.file;
+      const filename = req.file.filename;
       if (!file) {
         return res.status(400).send('No file uploaded.');
       }
@@ -78,7 +79,11 @@ export default class UserController {
       // const targetPath = path.join(__dirname, 'images', file.filename);
       // const success = await moveFile(tempPath, tempPath);
       const success = true;
-      const tempAvatar = "https://gitee.com/columbusk/newstand-resource/raw/master/donebg.png";
+      let avatarUrl = null;
+      let tempAvatar = "https://gitee.com/columbusk/newstand-resource/raw/master/donebg.png";
+      if (filename) {
+        tempAvatar = `http://8.130.161.27/uploads/${filename}`
+      }
       res.json({ avatarUrl: tempAvatar });
     } catch (error) {
       console.error(error);
