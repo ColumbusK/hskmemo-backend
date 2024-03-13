@@ -50,8 +50,11 @@ router.route('/studytime').get(UserController.apiGetUserStudyTime);
 // 检查用户今日计划完成情况
 router.route('/checkplan').get(UserController.apiCheckUserPlan);
 // 用户头像上传
+router.route('/avatar').post(upload.single('file'), UserController.apiUpdateAvatar);
+// 获取用户个人信息
 router.route('/profile').get(UserController.apiGetProfile);
-router.route('/profile').post(upload.single('file'), UserController.apiUpdateProfile);
+// 更新用户个人信息
+router.route('/profile').post(UserController.apiUpdateProfile);
 
 
 export default router;

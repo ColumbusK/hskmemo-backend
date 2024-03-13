@@ -66,11 +66,10 @@ export default class UserController {
     }
   }
 
-  // 头像上传更新
-  static async apiUpdateProfile(req, res) {
+  // 头像上传
+  static async apiUpdateAvatar(req, res) {
     try {
       console.log(req.file);
-      console.log("req.formData", req.body, req.body.username);
       const file = req.file;
       if (!file) {
         return res.status(400).send('No file uploaded.');
@@ -79,32 +78,39 @@ export default class UserController {
       // const targetPath = path.join(__dirname, 'images', file.filename);
       // const success = await moveFile(tempPath, tempPath);
       const success = true;
-      const avatar = "https://gitee.com/columbusk/newstand-resource/raw/master/donebg.png";
-      if (success) {
-        // 在真实应用中，你可能会将文件信息保存到数据库，然后返回文件的URL
-        res.send(`File uploaded: ${tempPath}`);
-        const token = req.headers.authorization;
-        const openid = jwt.decode(token, SECRET);
-        const user = await usersDAO.getUserByOpenId(openid);
-        console.log("user", user);
-        if (!user) {
-          res.status(404).json({ error: "Not found" });
-          return;
-        }
-        const filter = { openid: openid };
-        const updatedFields = {
-          ...user,
-          username: req.body.username,
-          avatarUrl: avatar,
-          email: req.body.email,
-          gender: req.body.gender,
-          country: req.body.country
-        };
-        const updateResponse = await usersDAO.updateDocumnet(filter, updatedFields);
-        console.log("updateResponse", updateResponse);
-      } else {
-        res.status(500).send('Error moving the file.');
+      const tempAvatar = "https://gitee.com/columbusk/newstand-resource/raw/master/donebg.png";
+      res.json({ avatarUrl: tempAvatar });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error.');
+    }
+  }
+
+  // 用户个人信息更新
+  static async apiUpdateProfile(req, res) {
+    try {
+      // 在真实应用中，你可能会将文件信息保存到数据库，然后返回文件的URL
+      const data = req.body;
+      console.log("apiUpdateProfile", data);
+      const openid = req.openid;
+      const user = await usersDAO.getUserByOpenId(openid);
+      console.log("user", user);
+      if (!user) {
+        res.status(404).json({ error: "User Not found" });
+        return;
       }
+      const filter = { openid: openid };
+      const updatedFields = {
+        ...user,
+        username: req.body.username,
+        avatarUrl: req.body.avatarUrl,
+        email: req.body.email,
+        gender: req.body.gender,
+        country: req.body.country
+      };
+      const updateResponse = await usersDAO.updateDocumnet(filter, updatedFields);
+      console.log("updateResponse", updateResponse);
+      res.json(updateResponse);
     } catch (error) {
       console.error(error);
       res.status(500).send('Internal Server Error.');
