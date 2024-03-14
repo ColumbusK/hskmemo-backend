@@ -28,7 +28,7 @@ router.route('/').get((req, res, next) => {
 });
 //
 router.route('/login').post(UserController.apiLogin);
-router.route('/code/:code').get(UserController.apiGetToken);
+// router.route('/code/:code').get(UserController.apiGetToken);
 // 更新用户信息登录并返回token
 router.route('/code/:code').post(UserController.apiUpdateLogin);
 router.route('/times').put(UserController.apiUpdateUser);

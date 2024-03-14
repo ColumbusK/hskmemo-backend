@@ -6,6 +6,7 @@ import wordsRouter from "./api/words.route.js";
 import userRouter from "./api/user.route.js";
 import practiceRouter from "./api/practice.route.js";
 import dictsRouter from "./api/dicts.route.js";
+import UserController from "./api/user.controller.js";
 
 import { verifyUsers } from "./middlewares/user.middleware.js";
 import { errorHandler } from "./middlewares/errors.js";
@@ -27,6 +28,9 @@ app.use(express.json());
 
 app.use('/', indexRouter);
 
+
+// 登录验证前摘出
+app.route('/api/v1/user/code/:code').get(UserController.apiGetToken);
 // 自定义中间件
 app.use(verifyUsers);
 app.use("/api/v1/user", userRouter);

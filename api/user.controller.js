@@ -58,7 +58,6 @@ export default class UserController {
         gender,
         country,
       };
-
       console.log(userFields);
       res.json(userFields);
     } catch (error) {
