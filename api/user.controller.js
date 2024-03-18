@@ -16,6 +16,8 @@ import userModel from "../models/user.model.js";
 import checkModel from "../models/check.js";
 // import decryptPhoneNumber from "../utils/wxDecode.js";
 import { getCurrentDate } from "../utils/tools.js";
+import { getTimeStamp } from "../utils/tools.js";
+
 
 dotenv.config();
 
@@ -401,9 +403,10 @@ export default class UserController {
       }
       const { number } = req.body || {};
       const data = {
-        ...checkModel,
         openid: openid,
         number: number,
+        check_date: localtDate,
+        datetime: new Date(),
       };
       console.log("UpdateUserCheck data", data);
       const result = await calendarDAO.addCalendar(data);
