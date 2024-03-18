@@ -405,7 +405,7 @@ export default class UserController {
       const data = {
         openid: openid,
         number: number,
-        check_date: localtDate,
+        check_date: getTimeStamp(),
         datetime: new Date(),
       };
       console.log("UpdateUserCheck data", data);
