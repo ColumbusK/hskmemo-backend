@@ -6,6 +6,8 @@ import wordsRouter from "./api/words.route.js";
 import userRouter from "./api/user.route.js";
 import practiceRouter from "./api/practice.route.js";
 import dictsRouter from "./api/dicts.route.js";
+import resourcesRouter from "./routes/resourcesRoute.js"
+
 import UserController from "./api/user.controller.js";
 
 import { verifyUsers } from "./middlewares/user.middleware.js";
@@ -27,6 +29,7 @@ app.use(express.json());
 
 
 app.use('/', indexRouter);
+app.use("/api/v1/resources", resourcesRouter);
 
 
 // 登录验证前摘出
@@ -39,6 +42,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/words", wordsRouter);
 app.use("/api/v1/practice", practiceRouter);
 app.use("/api/v1/dicts", dictsRouter);
+
 
 // 错误处理中间件
 app.use(errorHandler);

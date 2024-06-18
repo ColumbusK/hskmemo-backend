@@ -11,6 +11,7 @@ import DictsDAO from "./db/dictsDAO.js";
 import CollectionsDAO from "./db/collectionsDAO.js";
 import CalendarDAO from "./db/calendarDAO.js";
 import RecordsDAO from "./db/recordsDAO.js";
+import ResourcesDAO from "./db/resourcesDAO.js";
 
 
 async function main() {
@@ -39,6 +40,8 @@ async function main() {
     await CalendarDAO.injectDB(client);
     // 连接到 records collection
     await RecordsDAO.injectDB(client);
+    // 连接到 yunfan_resource DB
+    await ResourcesDAO.injectDB(client);
 
     console.log("MongoDB connected");
 
